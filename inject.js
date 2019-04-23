@@ -126,8 +126,10 @@
           if (!tc.settings.speeds[target.src]) {
             tc.settings.speeds[target.src] = 1.0;
           }
+          console.log("play listener: forget speed: "+tc.settings.speeds[target.src]);
           setKeyBindings("reset", getKeyBindings("fast")); // resetSpeed = fastSpeed
         } else {
+          console.log("play listener: remember speed: "+tc.settings.speed);
           tc.settings.speeds[target.src] = tc.settings.speed;
         }
         target.playbackRate = tc.settings.speeds[target.src];
@@ -140,6 +142,7 @@
           var speed = this.getSpeed();
           this.speedIndicator.textContent = speed;
           tc.settings.speeds[this.video.src] = speed;
+          tc.settings.speed = speed;
           chrome.storage.sync.set({'speed': speed}, function() {
             console.log('Speed setting saved: ' + speed);
           });
@@ -432,6 +435,7 @@
           var s = Math.max(v.playbackRate - value, 0.07);
           v.playbackRate = Number(s.toFixed(2));
         } else if (action === 'reset') {
+          console.log('reset in runAction');
           resetSpeed(v, 1.0);
         } else if (action === 'display') {
           controller.classList.add('vsc-manual');
@@ -439,6 +443,7 @@
         } else if (action === 'drag') {
           handleDrag(v, controller, e);
         } else if (action === 'fast') {
+          console.log('fast in runAction. value='+value);
           resetSpeed(v, value);
         } else if (action === 'pause') {
           pauseSpeed(v, value);
@@ -454,6 +459,7 @@
     if (v.playbackRate === target) {
       v.play()
     }
+    console.log('pauseSpeed');
     resetSpeed(v, target)
   }
 
